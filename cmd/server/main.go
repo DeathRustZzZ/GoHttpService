@@ -16,11 +16,13 @@ func apiPage(res http.ResponseWriter, req *http.Request) {
 }
 
 func main() {
-	http.HandleFunc(`/api`, apiPage)
-	http.HandleFunc(`/`, mainPage)
+	mux := http.NewServeMux()
+
+	mux.HandleFunc(`GET /api`, apiPage)
+	mux.HandleFunc(`GET /`, mainPage)
 
 	fmt.Println("Server started: http://localhost:8080")
-	err := http.ListenAndServe(`:8080`, nil)
+	err := http.ListenAndServe(`:8080`, mux)
 	if err != nil {
 		panic(err)
 	}
