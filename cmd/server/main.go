@@ -5,7 +5,14 @@ import (
 	"net/http"
 )
 
+// mainPage displays the main pages
 func mainPage(res http.ResponseWriter, req *http.Request) {
+
+	if req.Method != http.MethodGet {
+		http.Error(res, "Only GET requests are allowed!", http.StatusMethodNotAllowed)
+		return
+	}
+
 	fmt.Println("mainPage:", req.URL.Path)
 	res.Write([]byte("Hello !"))
 }
