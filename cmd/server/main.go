@@ -1,19 +1,26 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 )
 
-type MyHandler struct{}
+func mainPage(res http.ResponseWriter, req *http.Request) {
+	fmt.Println("mainPage:", req.URL.Path)
+	res.Write([]byte("Hello !"))
+}
 
-func (h MyHandler) ServeHTTP(res http.ResponseWriter, req *http.Request) {
-	data := []byte("Hello")
-	res.Write(data)
+func apiPage(res http.ResponseWriter, req *http.Request) {
+	fmt.Println("apiPage:", req.URL.Path)
+	res.Write([]byte("This page for /api"))
 }
 
 func main() {
-	var h MyHandler
-	err := http.ListenAndServe(`:8080`, h)
+	http.HandleFunc(`/api`, apiPage)
+	http.HandleFunc(`/`, mainPage)
+
+	fmt.Println("Server started: http://localhost:8080")
+	err := http.ListenAndServe(`:8080`, nil)
 	if err != nil {
 		panic(err)
 	}
