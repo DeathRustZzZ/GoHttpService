@@ -7,6 +7,17 @@ import (
 
 // mainPage displays the main pages
 func mainPage(res http.ResponseWriter, req *http.Request) {
+	body := fmt.Sprintf("Method: %s\r\n", req.Method)
+	body += "Header ===============\r\n"
+
+	for k, v := range req.Header {
+		body += fmt.Sprintf("%s: %v\r\n", k, v)
+	}
+	body += "Query parameters ===============\r\n"
+
+	for k, v := range req.URL.Query() {
+		body += fmt.Sprintf("%s: %v\r\n", k, v)
+	}
 
 	if req.Method != http.MethodGet {
 		http.Error(res, "Only GET requests are allowed!", http.StatusMethodNotAllowed)
@@ -14,7 +25,7 @@ func mainPage(res http.ResponseWriter, req *http.Request) {
 	}
 
 	fmt.Println("mainPage:", req.URL.Path)
-	res.Write([]byte("Hello !"))
+	res.Write([]byte(body))
 }
 
 func apiPage(res http.ResponseWriter, req *http.Request) {
